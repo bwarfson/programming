@@ -4,8 +4,8 @@ using System.Text;
 
 namespace school
 {
-    public class Teacher
+    public class Teacher : Person
     {
-        public string Name { get; set; }      
+              
     }
 }

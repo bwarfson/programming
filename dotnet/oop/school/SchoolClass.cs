@@ -4,7 +4,7 @@ using System.Text;
 
 namespace school
 {
-    class SchoolClass
+    public class SchoolClass
     {
     }
 }
