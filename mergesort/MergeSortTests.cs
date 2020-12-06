@@ -1,10 +1,9 @@
-using algorithms;
 using System;
 using Xunit;
 
-namespace algorithms_tests
+namespace mergesort
 {
-    public class mergeSortTests
+    public class MergeSortTests
     {
         [Fact]
         public void Test1()
@@ -14,8 +13,6 @@ namespace algorithms_tests
             var testArray = new int[] { 8, 6, 7, 5, 3, 0, 9 };
 
             var sorted = sortAlgorithm.MergeSort(testArray, 0, testArray.Length - 1);
-
-
         }
     }
 }

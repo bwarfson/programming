@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace algorithms
+namespace mergesort
 {
     public class IntMergeSort
     {
