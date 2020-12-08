@@ -19,6 +19,7 @@ namespace hr_easy_grading_students
         }
 
         /// <summary>
+        /// https://www.hackerrank.com/challenges/grading/problem
         /// Every student receives a grade in the inclusive range from 0 to 100.
         /// Any grade less then 40 is a failing grade.
         /// If the difference between the grade and the next multiple of 5 is less than 3, round grade up to the next multiple of 5.
