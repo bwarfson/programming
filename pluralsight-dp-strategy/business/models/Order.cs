@@ -23,6 +23,10 @@ namespace pluralsight_dp_strategy.business.models
 
         public ISalesTaxStrategy SalesTaxStrategy { get; set; }
 
+        public IInvoiceStrategy InvoiceStrategy { get; set; }
+
+        public IShippingStrategy ShippingStrategy { get; set; }
+
         public decimal GetTax()
         {
             if(SalesTaxStrategy == null)
@@ -31,6 +35,24 @@ namespace pluralsight_dp_strategy.business.models
             }
 
             return SalesTaxStrategy.GetTaxFor(this);
+        }
+
+        public void FinalizeOrder()
+        {
+            if(SelectedPayments.Any(x => x.PaymentProvider == PaymentProvider.Invoice) &&
+               AmountDue > 0 && 
+               ShippingStatus == ShippingStatus.WaitingForPayment)
+            {
+                InvoiceStrategy.Generate(this);
+
+                ShippingStatus = ShippingStatus.ReadyForShippment;
+            }
+            else if(AmountDue > 0)
+            {
+                throw new Exception("Unable to finalize order");
+            }
+
+            ShippingStrategy.Ship(this);
         }
     }
 
@@ -78,18 +100,18 @@ namespace pluralsight_dp_strategy.business.models
 
         public ItemType ItemType { get; set; }
 
-        public decimal GetTax()
-        {
-            switch (ItemType)
-            {
-                case ItemType.Service:
-                case ItemType.Food:
-                case ItemType.Hardware:
-                case ItemType.Literature:
-                default:
-                    return 0m;
-            }
-        }
+        //public decimal GetTax()
+        //{
+        //    switch (ItemType)
+        //    {
+        //        case ItemType.Service:
+        //        case ItemType.Food:
+        //        case ItemType.Hardware:
+        //        case ItemType.Literature:
+        //        default:
+        //            return 0m;
+        //    }
+        //}
 
         public Item(string id, string name, decimal price, ItemType type)
         {
