@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -14,6 +15,34 @@ namespace cb_easy_question_marks
         {
             this.output = output;
         }
+
+        public static string QuestionsMarksDave(string str) 
+        {
+            var result= "false";
+    
+            int firstIndex = -1;
+            int secondIndex = -1;
+            int firstNumber = -1;
+            int secondNumber = -1;
+            int number = -1;
+            int qCount = 0;
+            string substring = string.Empty;
+            bool couldParse = false;
+            str.ToList().ForEach(x => 
+            {      
+                couldParse = int.TryParse(x.ToString(), out number);
+                
+                firstIndex = couldParse && firstIndex == -1 ? str.IndexOf(x) : firstIndex;
+                secondIndex = couldParse && secondIndex == -1 && firstIndex != str.IndexOf(x) ? str.IndexOf(x) : secondIndex;
+                firstNumber = firstIndex != -1 ? number : firstIndex;
+                secondNumber = secondIndex != -1 ? number : secondIndex;
+                substring = firstIndex != -1 && secondIndex != -1 ? str.Substring(firstIndex, (secondIndex - firstIndex)) : string.Empty;
+                qCount = substring.ToList().Where(c => c == '?').Count();
+                result = firstNumber + secondNumber == 10 ? (qCount == 3 ? "true" : "false") : "false";
+            });
+            return result;
+        }
+
         public bool QuestionMarks(string str) 
         {
             var numberIndexList = new List<int>();
@@ -112,6 +141,76 @@ namespace cb_easy_question_marks
             var response = QuestionMarks(test);
 
             Assert.False(response);
+        }
+
+        [Fact]
+        public void Case8()
+        {
+            var test = "arrb6???4xxbl5???eee5";
+
+            var response = QuestionsMarksDave(test);
+
+            Assert.Equal("true", response);
+        }
+
+        [Fact]
+        public void Case9()
+        {
+            var test = "9???1???9???1???9";
+
+            var response = QuestionsMarksDave(test);
+
+            Assert.Equal("true", response);
+        }
+
+        [Fact]
+        public void Case10()
+        {
+            var test = "5??aaaaaaaaaaaaaaaaaaa?5?a??5";
+
+            var response = QuestionsMarksDave(test);
+
+            Assert.Equal("true", response);
+        }
+
+        [Fact]
+        public void Case11()
+        {
+            var test = "aa6?9";
+
+            var response = QuestionsMarksDave(test);
+
+            Assert.Equal("false", response);
+        }
+
+        [Fact]
+        public void Case12()
+        {
+            var test = "?";
+
+            var response = QuestionsMarksDave(test);
+
+            Assert.Equal("false", response);
+        }
+
+        [Fact]
+        public void Case13()
+        {
+            var test = "";
+
+            var response = QuestionsMarksDave(test);
+
+            Assert.Equal("false", response);
+        }
+
+        [Fact]
+        public void Case14()
+        {
+            var test = "5????5";
+
+            var response = QuestionsMarksDave(test);
+
+            Assert.Equal("false", response);
         }
     }
 }
