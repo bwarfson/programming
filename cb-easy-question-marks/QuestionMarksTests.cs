@@ -18,7 +18,7 @@ namespace cb_easy_question_marks
 
         public static string QuestionsMarksDave(string str) 
         {
-            var result= "false";
+            List<string> results = new List<string>();
     
             int firstIndex = -1;
             int secondIndex = -1;
@@ -34,13 +34,23 @@ namespace cb_easy_question_marks
                 
                 firstIndex = couldParse && firstIndex == -1 ? str.IndexOf(x) : firstIndex;
                 secondIndex = couldParse && secondIndex == -1 && firstIndex != str.IndexOf(x) ? str.IndexOf(x) : secondIndex;
-                firstNumber = firstIndex != -1 ? number : firstIndex;
-                secondNumber = secondIndex != -1 ? number : secondIndex;
+                firstNumber = couldParse && firstIndex != -1 && firstNumber == -1 ? number : firstNumber;
+                secondNumber = couldParse && secondIndex != -1 && secondNumber == -1 ? number : secondNumber;
                 substring = firstIndex != -1 && secondIndex != -1 ? str.Substring(firstIndex, (secondIndex - firstIndex)) : string.Empty;
                 qCount = substring.ToList().Where(c => c == '?').Count();
-                result = firstNumber + secondNumber == 10 ? (qCount == 3 ? "true" : "false") : "false";
-            });
-            return result;
+                results.Add(firstNumber + secondNumber == 10 ? (qCount == 3 ? "true" : "false") : string.Empty);
+                qCount = firstNumber != -1 && secondNumber != -1 ? 0 : qCount;
+                firstNumber = firstNumber != -1 && secondNumber != -1 ? -1 : firstNumber;
+                secondNumber = firstNumber == -1 && secondNumber != -1 ? -1 : secondNumber;
+                firstIndex = firstIndex != -1 && secondIndex != -1 ? -1 : firstIndex;
+                secondIndex = firstIndex == -1 && secondIndex != -1  ? -1 : secondIndex;
+        });
+    
+    if(results.All(x => x == string.Empty))
+    {
+      return "false";
+    }
+    return results.Where(x => x != string.Empty).All(x => x == "true") ? "true" : "false";
         }
 
         public bool QuestionMarks(string str) 

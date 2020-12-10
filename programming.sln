@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hr-easy-ransom-note", "hr-e
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cb-easy-question-marks", "cb-easy-question-marks\cb-easy-question-marks.csproj", "{82FE1B8F-DB7F-4DB1-B634-8DE44F04C99E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fcp-10-recursion", "fcp-10-recursion\fcp-10-recursion.csproj", "{71C0A93B-68BC-4807-81E3-CB487127772E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +141,18 @@ Global
 		{82FE1B8F-DB7F-4DB1-B634-8DE44F04C99E}.Release|x64.Build.0 = Release|Any CPU
 		{82FE1B8F-DB7F-4DB1-B634-8DE44F04C99E}.Release|x86.ActiveCfg = Release|Any CPU
 		{82FE1B8F-DB7F-4DB1-B634-8DE44F04C99E}.Release|x86.Build.0 = Release|Any CPU
+		{71C0A93B-68BC-4807-81E3-CB487127772E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71C0A93B-68BC-4807-81E3-CB487127772E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71C0A93B-68BC-4807-81E3-CB487127772E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{71C0A93B-68BC-4807-81E3-CB487127772E}.Debug|x64.Build.0 = Debug|Any CPU
+		{71C0A93B-68BC-4807-81E3-CB487127772E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{71C0A93B-68BC-4807-81E3-CB487127772E}.Debug|x86.Build.0 = Debug|Any CPU
+		{71C0A93B-68BC-4807-81E3-CB487127772E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71C0A93B-68BC-4807-81E3-CB487127772E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71C0A93B-68BC-4807-81E3-CB487127772E}.Release|x64.ActiveCfg = Release|Any CPU
+		{71C0A93B-68BC-4807-81E3-CB487127772E}.Release|x64.Build.0 = Release|Any CPU
+		{71C0A93B-68BC-4807-81E3-CB487127772E}.Release|x86.ActiveCfg = Release|Any CPU
+		{71C0A93B-68BC-4807-81E3-CB487127772E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
