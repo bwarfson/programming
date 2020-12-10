@@ -1,4 +1,5 @@
 [Mocking AWS with LocalStack in .NET Core 3](https://shtanko-michael.medium.com/mocking-aws-with-localstack-in-net-core-3-ef32ae888706)
+[Repo](https://github.com/shtanko-michael/localstack-file-manager)
 
 **Benefits of using LocalStack:**
 - You can save money during development and testing
