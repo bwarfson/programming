@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cb-easy-question-marks", "c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fcp-10-recursion", "fcp-10-recursion\fcp-10-recursion.csproj", "{71C0A93B-68BC-4807-81E3-CB487127772E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pluralsight-aws-dynamodb-deep-dive", "pluralsight-aws-dynamodb-deep-dive\pluralsight-aws-dynamodb-deep-dive.csproj", "{696865A5-8B49-4C8E-A5BE-D6182A6BD8B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,18 @@ Global
 		{71C0A93B-68BC-4807-81E3-CB487127772E}.Release|x64.Build.0 = Release|Any CPU
 		{71C0A93B-68BC-4807-81E3-CB487127772E}.Release|x86.ActiveCfg = Release|Any CPU
 		{71C0A93B-68BC-4807-81E3-CB487127772E}.Release|x86.Build.0 = Release|Any CPU
+		{696865A5-8B49-4C8E-A5BE-D6182A6BD8B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{696865A5-8B49-4C8E-A5BE-D6182A6BD8B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{696865A5-8B49-4C8E-A5BE-D6182A6BD8B3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{696865A5-8B49-4C8E-A5BE-D6182A6BD8B3}.Debug|x64.Build.0 = Debug|Any CPU
+		{696865A5-8B49-4C8E-A5BE-D6182A6BD8B3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{696865A5-8B49-4C8E-A5BE-D6182A6BD8B3}.Debug|x86.Build.0 = Debug|Any CPU
+		{696865A5-8B49-4C8E-A5BE-D6182A6BD8B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{696865A5-8B49-4C8E-A5BE-D6182A6BD8B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{696865A5-8B49-4C8E-A5BE-D6182A6BD8B3}.Release|x64.ActiveCfg = Release|Any CPU
+		{696865A5-8B49-4C8E-A5BE-D6182A6BD8B3}.Release|x64.Build.0 = Release|Any CPU
+		{696865A5-8B49-4C8E-A5BE-D6182A6BD8B3}.Release|x86.ActiveCfg = Release|Any CPU
+		{696865A5-8B49-4C8E-A5BE-D6182A6BD8B3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
