@@ -3,8 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:22637",
-      "sslPort": 44383
+      "applicationUrl": "http://localhost:56221/",
+      "sslPort": 0
     }
   },
   "profiles": {
@@ -18,10 +18,10 @@
     "Commerce.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "http://localhost:56222"
     }
   }
 }

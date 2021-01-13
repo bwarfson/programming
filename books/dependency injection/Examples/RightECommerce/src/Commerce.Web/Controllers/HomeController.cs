@@ -1,37 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Commerce.Web.Models;
+using Ploeh.Samples.Commerce.Domain;
+using Ploeh.Samples.Commerce.Web.Models;
 
-namespace Commerce.Web.Controllers
+namespace Ploeh.Samples.Commerce.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IProductService productService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IProductService productService)
         {
-            _logger = logger;
+            if (productService == null) throw new ArgumentNullException(nameof(productService));
+
+            this.productService = productService;
         }
 
-        public IActionResult Index()
+        public ViewResult Index()
         {
-            return View();
+            IEnumerable<DiscountedProduct> featuredProducts =
+                this.productService.GetFeaturedProducts();
+
+            var vm = new FeaturedProductsViewModel(
+                from product in featuredProducts
+                select new ProductViewModel(product));
+
+            return this.View(vm);
         }
 
-        public IActionResult Privacy()
+        public ViewResult About()
         {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return this.View();
         }
     }
 }
