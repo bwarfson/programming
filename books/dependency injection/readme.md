@@ -44,3 +44,47 @@ the requested functionality without overengineering the solution.
 
 > Because we practice Test-Driven Development (TDD), we start by writing unit tests as soon as our outside-in approach prompts us to create a new class.
 
+>  Constructor Injection is the act of statically defining the list of required Dependencies by specifying them as parameters to the class’s constructor. 
+
+> **Composition Root** As we discussed in section 1.4.1, we’d like to be able to compose our classes into applications in a way similar to how we plug electrical appliances together. This level of modularity can be achieved by centralizing the creation of our classes into a single place. We
+call this location the Composition Root. The Composition Root is located as close as possible to the application’s entry point. In most .NET Core application types, the entry point is the Main method. Inside the Composition Root, you can decide to compose your application manually—that’s using Pure DI—or to delegate it to a DI Container. We’ll discuss Composition Root in more detail in chapter 4.
+
+> The domain model is a plain, vanilla C# library that we add to the solution. This library will contain POCOs and interfaces.
+
+> The principle of programming to interfaces instead of concrete classes is a cornerstone of DI. It’s this principle that lets you replace one concrete implementation with another
+
+> IProductRepository is the interface to the data access layer, returning “raw” Entities from the persistence store. By contrast, IProductService applies business logic, such as the discount in this case, and converts the Entities to a narrower-focused object. 
+
+> following the outside-in principle, we only define the classes and members needed for the task at hand. It’s easier to add functionality to code than it is to remove anything.
+
+> **Entity** An Entity is a term from Domain-Driven Design that covers a domain object that has a long-term identity unrelated to a particular object instance.7 This may sound abstract and theoretical, but it means that an Entity represents an object that lives beyond arbitrary bits in memory. Any .NET object instance has an in-memory address (identity), but an Entity has an identity that lives across process lifetimes. We often use databases and primary keys to identify Entities and ensure that we can persist and read them even if the host computer reboots. The domain object Product is an
+Entity because the concept of a product has a longer lifetime than a single process, and we use a product ID to identify it in IProductRepository
+
+> **Dependency Inversion Principle** Much of what we’re trying to accomplish with DI is related to the Dependency Inversion Principle. This principle states that higher-level modules in our applications shouldn’t depend on lower-level modules; instead, modules of both levels should depend on Abstractions.
+
+### Summary
+- Refactoring existing applications towards a more maintainable, loosely coupled design is hard. Big rewrites, on the other hand, are often riskier and expensive.
+- The use of view models can simplify the view, because the incoming data is shaped specifically for the view.
+- Because views are harder to test, the dumber the view, the better. It also simplifies the work of a UI designer who might work on the view.
+- When you limit the amount of Volatile Dependencies within the domain layer, you get a higher degree of decoupling, reuse, and Testability.
+- When building applications, the outside-in approach facilitates more rapid prototyping, which can shorten the feedback cycle.
+- When you want a high degree of modularity in your application, you need to apply the Constructor Injection pattern and build object graphs in the Composition Root, which is located close to the application’s entry point.
+- Programming to interfaces is a cornerstone of DI. It allows you to replace, mock, and Intercept a Dependency, without having to make changes to its consumers. When implementation and Abstraction are placed in different assemblies, it enables whole libraries to be replaced.
+- Programming to interfaces doesn’t mean that all classes should implement an
+interface. Short-lived objects, such as Entities, view models, and DTOs, typically contain no behavior that requires mocking, Interception, decoration, or replacement.
+- With respect to DI, it doesn’t matter whether you use interfaces or purely abstract classes. From a general development perspective, as authors, we typically prefer interfaces over abstract classes.
+- A reusable library is a library that has clients that aren’t known at compile time. Reusable libraries are typically shipped via NuGet. Libraries that only have callers within the same (Visual Studio) solution aren’t considered to be reusable libraries.
+- DI is closely related to the Dependency Inversion Principle. This principle implies that you should program against interfaces, and that a layer must be in control over the interfaces it uses.
+- The use of a DI Container can help in making the application’s Composition Root more maintainable, but it won’t magically make tightly coupled code loosely coupled. For an application to become maintainable, it must be designed with DI patterns and techniques in mind.
+
+
+# 4 Catalog
+
+>  Constructor Injection and Composition Root are by far the most important design patterns, whereas all the other patterns should be treated as fringe cases that can be applied in specialized circumstances.
+
+> design patterns help us talk about how code is structured.
+
+> The main purpose of a design pattern is to provide a detailed and self-contained description of a particular way of attaining a goal—a recipe, if you will. 
+
+> When you write loosely coupled code, you create many classes to create an application. It can be tempting to compose these classes at many different locations in order to create small subsystems, but that limits your ability to Intercept those systems to modify their behavior. Instead, you should compose classes in one single area of your application.
+
