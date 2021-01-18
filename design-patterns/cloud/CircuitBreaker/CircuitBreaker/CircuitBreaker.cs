@@ -18,10 +18,13 @@ namespace CircuitBreaker
     }
     public class CircuitBreaker : ICircuitBreaker
     {
+        public int Failures { get; private set; }
+        public int Threshold { get; private set; }        
         public ICircuitState State { get; private set; }
-        public CircuitBreaker(TimeSpan timeout)
+        public CircuitBreaker(TimeSpan timeout, int threshold)
         {
             this.State = new ClosedCircuitState(timeout);
+            this.Threshold = threshold;
         }
 
         public void Guard()
@@ -43,6 +46,20 @@ namespace CircuitBreaker
             this.State = this.State.NextState();
             this.State.Succeed();
             this.State = this.State.NextState();
+        }
+
+        internal void IncreaseFailureCount()
+        {
+            Failures++;
+        }
+ 
+        internal void ResetFailureCount()
+        {
+            Failures = 0;
+        }
+        public bool IsThresholdReached()
+        {
+            return Failures >= Threshold;
         }
     }
 }
