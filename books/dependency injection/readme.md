@@ -88,3 +88,14 @@ interface. Short-lived objects, such as Entities, view models, and DTOs, typical
 
 > When you write loosely coupled code, you create many classes to create an application. It can be tempting to compose these classes at many different locations in order to create small subsystems, but that limits your ability to Intercept those systems to modify their behavior. Instead, you should compose classes in one single area of your application.
 
+### Q. What is a Composition Root?
+
+A. The **Composition Root** acts as a third party that connects consumers with their
+services. The longer you defer the decision on how to connect classes, the more you
+keep your options open. Thus, the Composition Root should be placed as close to the
+application’s entry point as possible.
+
+> **IMPORTANT** The Composition Root isn’t part of the UI layer, even though it might be placed in the same assembly.
+
+> Separating the presentation technology from the Composition Root might not be that beneficial, either, because a Composition Root is specific to the application. Composition Roots aren’t reused. You shouldn’t attempt to compose classes in any of the other modules, because that approach limits your options. All classes in application modules should use Constructor Injection (or, in rare cases, one of the other two patterns from this chapter), and then leave it up to the Composition Root to compose the application’s object graph. Any DI Container in use should be limited to the Composition Root.
+
