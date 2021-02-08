@@ -27,6 +27,7 @@
 - IAM User for the application
 - IAM Group 
 - IAM Role
+- IAM Policy
 - The Amazon Resource Name (ARN) of the role that the app should assume.
 
 
