@@ -30,10 +30,6 @@
 - The Amazon Resource Name (ARN) of the role that the app should assume.
 
 
-
-id:AKIA37ACLV4TCBV5MXEU
-key:ulEncWA886dmdj/FerZ1vcr53uu17iDsKGZ9QFpq
-
 Create Topic
 Create a Role.  For this role, we will specify that users form our sns publish group are the only ones that can wear the jacket. This is done by including the client’s AWS account ID in the Principal statement.
 
