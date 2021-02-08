@@ -98,3 +98,8 @@ draw(
 ### 2.2 Plane vector arithmetic
 
 **vector addition**: Vector addition is simple to calculate: given two input vectors, you add their x-coordinates to get the resulting x-coordinate and then you add their y-coordinates to get the resulting y-coordinate. Creating a new vector with these summed coordinates gives you the vector sum of the original vectors. For instance, (4, 3) + (−1, 1) = (3, 4) because 4 + (−1) = 3 and 3 + 1 = 4.
+
+The operation of multiplying a vector by a number is called **scalar multiplication**.
+When working with vectors, ordinary numbers are often called **scalars**. It’s also an appropriate term because the effect of this operation is **scaling** the target vector by the given factor.
+
+**Exercise 2.6:** If the vector u = (−2, 0), the vector v = (1.5, 1.5), and the vector w = (4, 1), what are the results of u + v, v + w, and u + w? What is the result of u + v + w?

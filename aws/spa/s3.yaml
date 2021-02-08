@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  BucketName: # we want to reuse this configuration for multiple environments (e.g. a dev and a prod environment).
+    Type: String
+Resources:
+  S3:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      AccessControl: PublicRead
+      BucketName: !Ref BucketName
+      WebsiteConfiguration:
+        IndexDocument: index.html
+  S3BucketPolicy:
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      Bucket: !Ref BucketName
+      PolicyDocument:
+        Statement:
+          -
+            Action: [ "s3:GetObject" ]
+            Effect: Allow
+            Principal: "*"
+            Resource: !Sub "arn:aws:s3:::${BucketName}/*"
+#https://medium.com/@joecrobak/production-deploy-of-a-single-page-app-using-s3-and-cloudfront-d4aa2d170aa3
