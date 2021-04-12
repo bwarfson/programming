@@ -5,7 +5,7 @@
 Fn::Ref arg
 ! Ref arg
 ```
-
+[Cheatsheet](https://cheatography.com/forrestbrazeal/cheat-sheets/aws-cloudformation/)
 ## Common Intrinsic Functions
 | Function                                               | Purpose                                                            |  
 | ------------------------------------------------------ | ------------------------------------------------------------------ |  

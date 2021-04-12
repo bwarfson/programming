@@ -36,3 +36,4 @@ Console.WriteLine(num.FirstOrDefault(x => x % 10==0))   // 0
 string[] name = { "ABC", "DE", "XYZH", "LMNO" };  
 Console.WriteLine(name.FirstOrDefault(x => x.Length > 5));    // Output will be blank
 ```
+

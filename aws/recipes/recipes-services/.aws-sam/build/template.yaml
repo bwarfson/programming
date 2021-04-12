@@ -1,0 +1,151 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'Sample SAM Template for recipes-services
+
+  '
+Globals:
+  Function:
+    Timeout: 10
+Resources:
+  RecipeApplication:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: RecipeApplication
+  RecipeApplicaitonRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: Role to assume when publishing message to sns
+      RoleName: RecipeApplicaitonRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action: sts:AssumeRole
+          Principal:
+            AWS:
+              Fn::GetAtt:
+              - RecipeApplication
+              - Arn
+  PublishTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: PublishTopic
+      FifoTopic: false
+      TopicName: PublishTopic
+  PublishTopicPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: SNS-Publish-Policy
+      Description: Policy to allow publish access to publish sns topic
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Action:
+          - sns:Publish
+          Resource:
+          - Ref: PublishTopic
+      Roles:
+      - Ref: RecipeApplicaitonRole
+  PublishQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: PublishQueue
+  PublishSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint:
+        Fn::GetAtt:
+        - PublishQueue
+        - Arn
+      Protocol: sqs
+      RawMessageDelivery: true
+      TopicArn:
+        Ref: PublishTopic
+  PublishTopicSendQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Id: Publish-SQS-Send-Policy
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: sns.amazonaws.com
+          Action:
+          - sqs:SendMessage
+          Resource: '*'
+          Condition:
+            ArnEquals:
+              aws:SourceArn:
+                Ref: PublishTopic
+      Queues:
+      - Ref: PublishQueue
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+      - PolicyName: allowLambdaLogs
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:*
+            Resource: arn:aws:logs:*:*:*
+      - PolicyName: allowSqs
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - sqs:ReceiveMessage
+            - sqs:DeleteMessage
+            - sqs:GetQueueAttributes
+            - sqs:ChangeMessageVisibility
+            Resource:
+              Fn::GetAtt:
+              - PublishQueue
+              - Arn
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: HelloWorldFunction
+      Handler: HelloWorld::HelloWorld.Function::FunctionHandler
+      Runtime: dotnetcore3.1
+      MemorySize: 256
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Environment:
+        Variables:
+          PARAM1: VALUE
+  LambdaFunctionEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 10
+      Enabled: true
+      EventSourceArn:
+        Fn::GetAtt:
+        - PublishQueue
+        - Arn
+      FunctionName:
+        Fn::GetAtt:
+        - HelloWorldFunction
+        - Arn
+Outputs:
+  HelloWorldFunction:
+    Description: Hello World Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - HelloWorldFunction
+      - Arn

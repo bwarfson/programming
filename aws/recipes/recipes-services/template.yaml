@@ -1,0 +1,147 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Sample SAM Template for recipes-services
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 10
+
+Resources:
+  RecipeApplication:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: RecipeApplication
+
+  RecipeApplicaitonRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: Role to assume when publishing message to sns
+      RoleName: RecipeApplicaitonRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+                  - Effect: Allow
+                    Action: sts:AssumeRole
+                    Principal:
+                      AWS: !GetAtt RecipeApplication.Arn
+                      
+  PublishTopic:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: PublishTopic
+      FifoTopic: false
+      TopicName: PublishTopic
+
+  PublishTopicPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: SNS-Publish-Policy
+      Description: Policy to allow publish access to publish sns topic
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sns:Publish
+            Resource: 
+              - !Ref PublishTopic
+      Roles:
+        - !Ref RecipeApplicaitonRole
+
+  PublishQueue:
+    Type: AWS::SQS::Queue
+    Properties: 
+      QueueName: PublishQueue
+
+  PublishSubscription:
+    Type: AWS::SNS::Subscription
+    Properties: 
+      Endpoint: !GetAtt
+        - PublishQueue
+        - Arn
+      Protocol: sqs
+      RawMessageDelivery: true
+      TopicArn: !Ref PublishTopic
+
+  PublishTopicSendQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Id: Publish-SQS-Send-Policy
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: sns.amazonaws.com
+            Action:
+              - sqs:SendMessage
+            Resource: '*'
+            Condition:
+              ArnEquals:
+                aws:SourceArn:
+                  Ref: PublishTopic
+      Queues:
+        - Ref: PublishQueue
+  
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+        - PolicyName: allowLambdaLogs
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - logs:*
+              Resource: arn:aws:logs:*:*:*
+        - PolicyName: allowSqs
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - sqs:ReceiveMessage
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+              - sqs:ChangeMessageVisibility
+              Resource: !GetAtt PublishQueue.Arn
+
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::FunctionHandler
+      Runtime: dotnetcore3.1
+      MemorySize: 256
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          PARAM1: VALUE
+
+  LambdaFunctionEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 10
+      Enabled: true
+      EventSourceArn: !GetAtt PublishQueue.Arn
+      FunctionName: !GetAtt HelloWorldFunction.Arn
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  
+  HelloWorldFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt HelloWorldFunction.Arn
