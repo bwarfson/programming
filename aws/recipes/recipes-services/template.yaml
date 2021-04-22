@@ -1,5 +1,4 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
 Description: >
   Sample SAM Template for recipes-services
 
@@ -9,6 +8,7 @@ Globals:
     Timeout: 10
 
 Resources:
+  
   RecipeApplication:
     Type: AWS::IAM::User
     Properties:
@@ -26,7 +26,7 @@ Resources:
                     Action: sts:AssumeRole
                     Principal:
                       AWS: !GetAtt RecipeApplication.Arn
-                      
+
   PublishTopic:
     Type: AWS::SNS::Topic
     Properties: 
@@ -50,10 +50,19 @@ Resources:
       Roles:
         - !Ref RecipeApplicaitonRole
 
+  PublishDeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties: 
+      QueueName: PublishDeadLetterQueue
+
   PublishQueue:
     Type: AWS::SQS::Queue
     Properties: 
       QueueName: PublishQueue
+      RedrivePolicy:
+        deadLetterTargetArn:
+          !GetAtt PublishDeadLetterQueue.Arn
+        maxReceiveCount: 5
 
   PublishSubscription:
     Type: AWS::SNS::Subscription
@@ -134,7 +143,9 @@ Resources:
     Properties:
       BatchSize: 10
       Enabled: true
-      EventSourceArn: !GetAtt PublishQueue.Arn
+      # EventSourceArn: !GetAtt PublishQueue.Arn
+      # arn:aws:sqs:us-west-2:000000000000:local_queue
+      EventSourceArn: arn:aws:sqs:us-west-2:000000000000:local_queue
       FunctionName: !GetAtt HelloWorldFunction.Arn
 
 Outputs:
