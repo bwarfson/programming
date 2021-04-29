@@ -1,4 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
 Description: >
   Sample SAM Template for recipes-services
 
@@ -50,6 +51,9 @@ Resources:
       Roles:
         - !Ref RecipeApplicaitonRole
 
+  
+
+
   PublishDeadLetterQueue:
     Type: AWS::SQS::Queue
     Properties: 
@@ -92,6 +96,20 @@ Resources:
                   Ref: PublishTopic
       Queues:
         - Ref: PublishQueue
+
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      TableName: HelloDynamoDB
+      AttributeDefinitions: 
+        - AttributeName: id
+          AttributeType: S
+      KeySchema: 
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput: 
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
   
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -125,6 +143,23 @@ Resources:
               - sqs:GetQueueAttributes
               - sqs:ChangeMessageVisibility
               Resource: !GetAtt PublishQueue.Arn
+        - PolicyName: allowDynamoDB
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - execute-api:Invoke
+              - dynamodb:BatchGet*
+              - dynamodb:Get*
+              - dynamodb:Query
+              - dynamodb:Scan
+              - dynamodb:BatchWrite*
+              - dynamodb:Delete*
+              - dynamodb:Update*
+              - dynamodb:PutItem
+              - dynamodb:DescribeTable
+              Resource: !GetAtt DynamoDBTable.Arn
 
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -143,11 +178,11 @@ Resources:
     Properties:
       BatchSize: 10
       Enabled: true
-      # EventSourceArn: !GetAtt PublishQueue.Arn
+      EventSourceArn: !GetAtt PublishQueue.Arn
       # arn:aws:sqs:us-west-2:000000000000:local_queue
-      EventSourceArn: arn:aws:sqs:us-west-2:000000000000:local_queue
+      # EventSourceArn: arn:aws:sqs:us-west-2:000000000000:local_queue
       FunctionName: !GetAtt HelloWorldFunction.Arn
-
+  
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM

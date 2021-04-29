@@ -47,10 +47,20 @@ Resources:
           - Ref: PublishTopic
       Roles:
       - Ref: RecipeApplicaitonRole
+  PublishDeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: PublishDeadLetterQueue
   PublishQueue:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: PublishQueue
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+          - PublishDeadLetterQueue
+          - Arn
+        maxReceiveCount: 5
   PublishSubscription:
     Type: AWS::SNS::Subscription
     Properties:
@@ -80,6 +90,19 @@ Resources:
                 Ref: PublishTopic
       Queues:
       - Ref: PublishQueue
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: HelloDynamoDB
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -114,6 +137,26 @@ Resources:
             Resource:
               Fn::GetAtt:
               - PublishQueue
+              - Arn
+      - PolicyName: allowDynamoDB
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - execute-api:Invoke
+            - dynamodb:BatchGet*
+            - dynamodb:Get*
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:BatchWrite*
+            - dynamodb:Delete*
+            - dynamodb:Update*
+            - dynamodb:PutItem
+            - dynamodb:DescribeTable
+            Resource:
+              Fn::GetAtt:
+              - DynamoDBTable
               - Arn
   HelloWorldFunction:
     Type: AWS::Serverless::Function
